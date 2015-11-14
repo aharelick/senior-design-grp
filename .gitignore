@@ -28,3 +28,7 @@ node_modules
 
 # Semantic UI
 semantic/dist
+
+# Config File
+config/config.js
+

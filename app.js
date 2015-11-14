@@ -4,11 +4,30 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var session = require('express-session');
+var mongoose = require('mongoose');
+var MongoStore = require('connect-mongo')(session);
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
+
+
+/**
+ * Connect to MongoDB.
+ */
+
+var config;
+if (app.get('env') === 'development') {
+  config = require('./config/config');
+}
+
+var dbURI = process.env.MONGOLAB_URI || config.db;
+
+mongoose.connect(dbURI);
+mongoose.connection.on('error', function() {
+  console.error('MongoDB Connection Error. Please make sure that MongoDB is running.');
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -20,6 +39,15 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({
+  resave: false,
+  saveUninitialized: false,
+  store: new MongoStore({
+    url: dbURI,
+    autoReconnect: true
+  }),
+  secret: process.env.SESSION_SECRET || config.sessionSecret,
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
