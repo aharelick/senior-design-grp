@@ -6,9 +6,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var mongoose = require('mongoose');
+var passport = require('passport');
 var MongoStore = require('connect-mongo')(session);
+var flash = require('connect-flash');
 var routes = require('./routes/index');
 var users = require('./routes/users');
+
+require('./config/pass')(passport);
 
 var app = express();
 
@@ -48,6 +52,10 @@ app.use(session({
   }),
   secret: process.env.SESSION_SECRET || config.sessionSecret,
 }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
