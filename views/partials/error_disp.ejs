@@ -1,9 +1,9 @@
 <% if (locals.messages) { %>
 	<% if (messages.errors) { %>
-		<ul class='list'>
-		<% for (i in messages.errors) { %>
-			<li><%= messages.errors[i].msg %></li>
-		<% } %>
+		<ul>
+			<% for (i in messages.errors) { %>
+				<li><%= messages.errors[i].msg %></li>
+			<% } %>
 		</ul>
 	<% } %>
 <% } %>
