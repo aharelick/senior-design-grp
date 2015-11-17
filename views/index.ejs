@@ -62,7 +62,12 @@
         Recommendation as a Service
       </div>
     </h2>
-    <form class="ui large form" action="/signup" method="POST">
+    <%if (messages.errors.length !== 0) { %>
+    <% console.log(messages.errors); %>
+      <form class="ui large form error" action="/signup" method="POST">
+    <% } else { %>
+      <form class="ui large form" action="/signup" method="POST">
+    <% } %>
       <div class="ui stacked segment">
         <div class="field">
           <div class="ui input">
@@ -81,10 +86,9 @@
         </div>
         <button class="ui fluid large teal submit button">Sign Up</button>
       </div>
-      <!--div class="server error">
-        <% include ./partials/error_disp %>
-      </div-->
-        <div class="ui error message"></div>
+      <div class="ui error message">
+          <% include ./partials/error_disp %>
+      </div>
     </form>
 
     <div class="ui message">
