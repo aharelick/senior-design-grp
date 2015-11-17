@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 
 /* GET dashboard. */
 router.get('/dashboard', function(req, res, next) {
-    res.render('dash', { title: 'RaaS'});
+    res.render('dashboard', { title: 'RaaS'});
 });
 
 /* POST signup. */
@@ -19,19 +19,16 @@ router.post('/signup', function(req, res, next) {
 	var email = req.body.email;
 	var password = req.body.password;
 	var confirm = req.body.confirm;
-    // req.assert('fname', 'First name cannot be blank').notEmpty();
-    // req.assert('lname', 'Last name cannot be blank').notEmpty();
-    // req.assert('email', 'Email is not valid').isEmail();
-    // req.assert('password', 'Password must be at least 6 characters long').len(6);
-    // req.assert('confirm', 'Passwords do not match').equals(req.body.password);
-    // req.assert('role', 'Not a valid role').role();
+    req.assert('email', 'Email is not valid').isEmail();
+    req.assert('password', 'Password must be at least 6 characters long').len(6);
+    req.assert('confirm', 'Passwords do not match').equals(req.body.password);
 
-    // var errors = req.validationErrors();
+    var errors = req.validationErrors();
 
-    // if (errors) {
-    //  req.flash('errors', errors);
-    //  return res.redirect('/signup');
-    // }
+    if (errors) {
+        req.flash('errors', errors);
+        return res.redirect('/');
+    }
 
     var user = new User({
         email: req.body.email,
@@ -41,12 +38,10 @@ router.post('/signup', function(req, res, next) {
     // email.toLowerCase()?
     User.findOne({ email: req.body.email }, function(err, existingUser) {
         if (existingUser) {
-            // req.flash('errors', { msg: 'Account with that email address already exists.' });
+            req.flash('errors', { msg: 'Account with that email address already exists.' });
             return res.redirect('/');
         }
-        console.log('before save');
         user.save(function(err) {
-            console.log('after save');
             if (err) return next(err);
             req.logIn(user, function(err) {
                 if (err) return next(err);

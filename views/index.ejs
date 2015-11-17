@@ -16,44 +16,42 @@
       max-width: 450px;
     }
   </style>
-  <!--script>
-  $(document)
-    .ready(function() {
-      $('.ui.form')
-        .form({
-          fields: {
-            email: {
-              identifier  : 'email',
-              rules: [
-                {
-                  type   : 'empty',
-                  prompt : 'Please enter your e-mail'
-                },
-                {
-                  type   : 'email',
-                  prompt : 'Please enter a valid e-mail'
-                }
-              ]
+   <script>
+    $(document).ready(function() {
+      $('.ui.form').form({
+        fields: {
+          email: {
+            identifier: 'email',
+            rules: [{
+              type: 'empty',
+              prompt : 'Please enter your e-mail'
             },
-            password: {
-              identifier  : 'password',
-              rules: [
-                {
-                  type   : 'empty',
-                  prompt : 'Please enter your password'
-                },
-                {
-                  type   : 'length[6]',
-                  prompt : 'Your password must be at least 6 characters'
-                }
-              ]
-            }
+            {
+              type   : 'email',
+              prompt : 'Please enter a valid e-mail'
+            }]
+          },
+          password: {
+            identifier  : 'password',
+            rules: [{
+              type   : 'empty',
+              prompt : 'Please enter your password'
+            },
+            {
+              type   : 'length[8]',
+              prompt : 'Your password must be at least 8 characters'
+            }]
+          },
+          confirm: {
+            rules: [{
+              type: 'match[password]',
+              prompt: 'Your passwords do not match'
+            }]
           }
-        })
-      ;
-    })
-  ;
-  </script-->
+        }
+      });
+    });
+  </script>
 </head>
 <body>
 
@@ -68,23 +66,25 @@
       <div class="ui stacked segment">
         <div class="field">
           <div class="ui input">
-            <input type="text" name="email" placeholder="E-mail address">
+            <input type="text" name="email" placeholder="E-mail address" required>
           </div>
         </div>
         <div class="field">
           <div class="ui input">
-            <input type="password" name="password" placeholder="Password">
+            <input type="password" name="password" placeholder="Password" required>
           </div>
         </div>
         <div class="field">
           <div class="ui input">
-            <input type="password" name="confirm" placeholder="Confirm Your Password">
+            <input type="password" name="confirm" placeholder="Confirm Your Password" required>
           </div>
         </div>
         <button class="ui fluid large teal submit button">Sign Up</button>
       </div>
 
-      <div class="ui error message"></div>
+      <div class="ui error message">
+        <% include ./partials/error_disp %>
+      </div>
 
     </form>
 
@@ -94,18 +94,20 @@
       <div>
         <div class="field">
           <div class="ui input">
-            <input type="text" name="email" placeholder="E-mail address">
+            <input type="text" name="email" placeholder="E-mail address" required>
           </div>
         </div>
         <div class="field">
           <div class="ui input">
-            <input type="password" name="password" placeholder="Password">
+            <input type="password" name="password" placeholder="Password" required>
           </div>
         </div>
         <button class="ui fluid teal submit button">Log In</button>
       </div>
 
-      <div class="ui error message"></div>
+      <div class="ui error message">
+
+      </div>
 
     </form>
     </div>
