@@ -62,7 +62,7 @@ router.post('/login', function(req, res, next) {
     if (err) { return next(err); }
     if (!user) {
       req.flash('errors', { msg: 'Incorrect email or password.' });
-      return res.redirect('/');
+      return res.redirect('/login');
     }
     req.login(user, function(err) {
       if (err) { return next(err); }
