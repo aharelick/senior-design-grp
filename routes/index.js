@@ -5,7 +5,6 @@ var User = require('../models/User');
 
 /* GET login page. */
 router.get('/', function(req, res, next) {
-  console.log(req.session.flash.error);
   res.render('index', { title: 'RaaS' });
 });
 
