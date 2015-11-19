@@ -3,9 +3,19 @@ var router = express.Router();
 var passport = require('passport');
 var User = require('../models/User');
 
-/* GET login page. */
+/* GET signup page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'RaaS' });
+  res.redirect('/signup');
+});
+
+/* GET signup page. */
+router.get('/signup', function(req, res, next) {
+  res.render('signup', { title: 'RaaS' });
+});
+
+/* GET login page. */
+router.get('/login', function(req, res, next) {
+  res.render('login', { title: 'RaaS'});
 });
 
 /* GET dashboard. */
@@ -27,7 +37,7 @@ router.post('/signup', function(req, res, next) {
 
   if (errors) {
     req.flash('errors', errors);
-    return res.redirect('/');
+    return res.redirect('/signup');
   }
 
   var user = new User({
@@ -39,7 +49,7 @@ router.post('/signup', function(req, res, next) {
   User.findOne({ email: req.body.email }, function(err, existingUser) {
     if (existingUser) {
       req.flash('errors', { msg: 'Account with that email address already exists.' });
-      return res.redirect('/');
+      return res.redirect('/signup');
     }
     user.save(function(err) {
       if (err) return next(err);
@@ -57,7 +67,7 @@ router.post('/login', function(req, res, next) {
     if (err) { return next(err); }
     if (!user) {
       req.flash('errors', { msg: 'Incorrect email or password.' });
-      return res.redirect('/');
+      return res.redirect('/login');
     }
     req.login(user, function(err) {
       if (err) { return next(err); }
@@ -68,7 +78,7 @@ router.post('/login', function(req, res, next) {
 
 router.get('/logout', function(req, res) {
   req.logout();
-  res.redirect('/');
+  res.redirect('/login');
 });
 
 module.exports = router;

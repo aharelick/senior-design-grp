@@ -88,32 +88,7 @@
             <% include ./partials/error_disp %>
           </div>
         </form>
-
-        <div class="ui message">Returning user?
-          <% if (messages.errors.length !== 0) { %>
-            <form class="ui form error" action="/login" method="POST">
-          <% } else { %>
-            <form class="ui form" action="/login" method="POST">
-        <% } %>
-              <div>
-                <div class="field">
-                  <div class="ui input">
-                    <input type="text" name="email" placeholder="E-mail address">
-                  </div>
-                </div>
-                <div class="field">
-                  <div class="ui input">
-                    <input type="password" name="password" placeholder="Password">
-                  </div>
-                </div>
-                <button class="ui fluid teal submit button">Log In</button>
-              </div>
-              <div class="ui error message">
-                  <% include ./partials/error_disp %>
-              </div>
-            </form>
-        </div>
-      </div>
+        <div class="ui message">Returning user? <a href="/login">Log In</a></div>
     </div>
   </div>
 </body>
