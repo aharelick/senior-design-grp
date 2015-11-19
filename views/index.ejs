@@ -18,103 +18,98 @@
   </style>
    <script>
     $(document).ready(function() {
-      $('.ui.form').form({
-        fields: {
-          email: {
-            identifier: 'email',
-            rules: [{
-              type: 'empty',
-              prompt : 'Please enter your e-mail'
-            },
-            {
-              type   : 'email',
-              prompt : 'Please enter a valid e-mail'
-            }]
-          },
-          password: {
-            identifier  : 'password',
-            rules: [{
-              type   : 'empty',
-              prompt : 'Please enter your password'
-            },
-            {
-              type   : 'length[8]',
-              prompt : 'Your password must be at least 8 characters'
-            }]
-          },
-          confirm: {
-            rules: [{
-              type: 'match[password]',
-              prompt: 'Your passwords do not match'
-            }]
-          }
-        }
-      });
+        $('.ui.form').form({
+            fields: {
+                email: {
+                    identifier: 'email',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Please enter your e-mail'
+                    },
+                    {
+                        type: 'email',
+                        prompt: 'Please enter a valid e-mail'
+                    }]
+                },
+                password: {
+                    identifier: 'password',
+                    rules: [{
+                        type: 'empty',
+                        prompt: 'Please enter your password'
+                    },
+                    {
+                        type: 'length[8]',
+                        prompt: 'Your password must be at least 8 characters'
+                    }]
+                },
+                confirm: {
+                    rules: [{
+                        type: 'match[password]',
+                        prompt: 'Your passwords do not match'
+                    }]
+                }
+            }
+        });
     });
   </script>
 </head>
 <body>
 
 <div class="ui middle aligned center aligned grid">
-  <div class="column">
-    <h2 class="ui teal image header">
-      <div class="content">
-        Recommendation as a Service
-      </div>
-    </h2>
-    <%if (messages.errors.length !== 0) { %>
-    <% console.log(messages.errors); %>
-      <form class="ui large form error" action="/signup" method="POST">
-    <% } else { %>
-      <form class="ui large form" action="/signup" method="POST">
-    <% } %>
-      <div class="ui stacked segment">
-        <div class="field">
-          <div class="ui input">
-            <input type="text" name="email" placeholder="E-mail address">
-          </div>
-        </div>
-        <div class="field">
-          <div class="ui input">
-            <input type="password" name="password" placeholder="Password">
-          </div>
-        </div>
-        <div class="field">
-          <div class="ui input">
-            <input type="password" name="confirm" placeholder="Confirm Your Password">
-          </div>
-        </div>
-        <button class="ui fluid large teal submit button">Sign Up</button>
-      </div>
-      <div class="ui error message">
-          <% include ./partials/error_disp %>
-      </div>
-    </form>
+    <div class="column">
+        <h2 class="ui teal image header">
+            <div class="content">
+                Recommendation as a Service
+            </div>
+        </h2>
+        <% if (messages.errors.length !== 0) { %>
+            <form class="ui large form error" action="/signup" method="POST">
+        <% } else { %>
+            <form class="ui large form" action="/signup" method="POST">
+        <% } %>
+                <div class="ui stacked segment">
+                    <div class="field">
+                        <div class="ui input">
+                            <input type="text" name="email" placeholder="E-mail address">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui input">
+                            <input type="password" name="password" placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui input">
+                            <input type="password" name="confirm" placeholder="Confirm Your Password">
+                        </div>
+                    </div>
+                    <button class="ui fluid large teal submit button">Sign Up</button>
+                </div>
+                <div class="ui error message">
+                    <% include ./partials/error_disp %>
+                </div>
+            </form>
 
-    <div class="ui message">
-      Returning user?
-      <form class="ui form" action="/login" method="POST">
-      <div>
-        <div class="field">
-          <div class="ui input">
-            <input type="text" name="email" placeholder="E-mail address">
-          </div>
+            <div class="ui message">Returning user?
+                <form class="ui form" action="/login" method="POST">
+                    <div>
+                        <div class="field">
+                            <div class="ui input">
+                                <input type="text" name="email" placeholder="E-mail address">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui input">
+                                <input type="password" name="password" placeholder="Password">
+                            </div>
+                        </div>
+                        <button class="ui fluid teal submit button">Log In</button>
+                    </div>
+                    <div class="ui error message"></div>
+                </form>
+            </div>
         </div>
-        <div class="field">
-          <div class="ui input">
-            <input type="password" name="password" placeholder="Password">
-          </div>
-        </div>
-        <button class="ui fluid teal submit button">Log In</button>
-      </div>
-
-      <div class="ui error message">
-
-      </div>
-
-    </form>
     </div>
-  </div>
 </div>
 
 </body>

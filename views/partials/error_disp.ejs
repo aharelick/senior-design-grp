@@ -1,8 +1,7 @@
-
-	<% if (messages.errors) { %>
-		<ul>
-			<% for (i in messages.errors) { %>
-				<li><%= messages.errors[i].msg %></li>
-			<% } %>
-		</ul>
-	<% } %>
+<% if (messages.errors) { %>
+    <ul>
+        <% for (i in messages.errors) { %>
+            <li><%= messages.errors[i].msg %></li>
+        <% } %>
+    </ul>
+<% } %>
