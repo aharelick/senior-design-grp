@@ -5,6 +5,11 @@ var User = require('../models/User');
 
 /* GET signup page. */
 router.get('/', function(req, res, next) {
+  res.redirect('/signup');
+});
+
+/* GET signup page. */
+router.get('/signup', function(req, res, next) {
   res.render('signup', { title: 'RaaS' });
 });
 
@@ -32,7 +37,7 @@ router.post('/signup', function(req, res, next) {
 
   if (errors) {
     req.flash('errors', errors);
-    return res.redirect('/');
+    return res.redirect('/signup');
   }
 
   var user = new User({
@@ -44,7 +49,7 @@ router.post('/signup', function(req, res, next) {
   User.findOne({ email: req.body.email }, function(err, existingUser) {
     if (existingUser) {
       req.flash('errors', { msg: 'Account with that email address already exists.' });
-      return res.redirect('/');
+      return res.redirect('/signup');
     }
     user.save(function(err) {
       if (err) return next(err);
@@ -73,7 +78,7 @@ router.post('/login', function(req, res, next) {
 
 router.get('/logout', function(req, res) {
   req.logout();
-  res.redirect('/');
+  res.redirect('/login');
 });
 
 module.exports = router;
