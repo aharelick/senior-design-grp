@@ -11,6 +11,7 @@ var MongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var expressValidator = require('express-validator');
 
 require('./config/pass')(passport);
 
@@ -41,7 +42,8 @@ app.set('view engine', 'ejs');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(expressValidator());
 app.use(cookieParser());
 app.use(session({
   resave: false,
@@ -55,6 +57,14 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+
+app.use(function(req, res, next) {
+  res.locals.messages = {
+    success: req.flash('success'),
+    errors: req.flash('errors')
+  };
+  next();
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 
