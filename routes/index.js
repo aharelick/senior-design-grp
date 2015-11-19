@@ -40,7 +40,7 @@ router.post('/signup', function(req, res, next) {
     password: req.body.password,
   });
 
-    // email.toLowerCase()?
+  // email.toLowerCase()?
   User.findOne({ email: req.body.email }, function(err, existingUser) {
     if (existingUser) {
       req.flash('errors', { msg: 'Account with that email address already exists.' });
@@ -48,7 +48,7 @@ router.post('/signup', function(req, res, next) {
     }
     user.save(function(err) {
       if (err) return next(err);
-      req.logIn(user, function(err) {
+      req.login(user, function(err) {
         if (err) return next(err);
         res.redirect('/dashboard');
       });
@@ -57,12 +57,19 @@ router.post('/signup', function(req, res, next) {
 });
 
 /* POST login. */
-router.post('/login', passport.authenticate('local', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/',
-    failureFlash: true
-  })
-);
+router.post('/login', function(req, res, next) {
+  passport.authenticate('local', function(err, user, info) {
+    if (err) { return next(err); }
+    if (!user) {
+      req.flash('errors', { msg: 'Incorrect email or password.' });
+      return res.redirect('/');
+    }
+    req.login(user, function(err) {
+      if (err) { return next(err); }
+      return res.redirect('/dashboard');
+    });
+  })(req, res, next);
+});
 
 router.get('/logout', function(req, res) {
   req.logout();
