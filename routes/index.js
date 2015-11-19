@@ -5,6 +5,7 @@ var User = require('../models/User');
 
 /* GET login page. */
 router.get('/', function(req, res, next) {
+  console.log(req.session.flash.error);
   res.render('index', { title: 'RaaS' });
 });
 
@@ -35,7 +36,7 @@ router.post('/signup', function(req, res, next) {
     password: req.body.password,
   });
 
-    // email.toLowerCase()?
+  // email.toLowerCase()?
   User.findOne({ email: req.body.email }, function(err, existingUser) {
     if (existingUser) {
       req.flash('errors', { msg: 'Account with that email address already exists.' });
@@ -43,7 +44,7 @@ router.post('/signup', function(req, res, next) {
     }
     user.save(function(err) {
       if (err) return next(err);
-      req.logIn(user, function(err) {
+      req.login(user, function(err) {
         if (err) return next(err);
         res.redirect('/dashboard');
       });

@@ -59,9 +59,11 @@ app.use(passport.session());
 app.use(flash());
 
 app.use(function(req, res, next) {
+  var errors = (req.session.flash.error).concat(req.flash('errors'));
+  req.session.flash.error = [];
   res.locals.messages = {
     success: req.flash('success'),
-    errors: req.flash('errors')
+    errors: errors
   };
   next();
 });
