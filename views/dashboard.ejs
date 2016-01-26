@@ -51,37 +51,25 @@
       }
 
       var uploadFile = function(file, signedRequest, url) {
-//        $.ajax({
-//          url: signedRequest,
-//          type: 'PUT',
-//          data: 'test',
-//          headers: { 'x-amz-acl': 'public-read' },
-//          success: function (data, textStatus, jqXHR) {
-//            console.log('uploaded file');
-//            console.log(data);
-//            console.log(url);
-//          },
-//          error: function (jqXHR, textStatus, err) {
-//            console.log(err);
-//          }
-//        });
+        $('#progress').progress({ percent: 0 });
         var xhr = new XMLHttpRequest();
         xhr.open("PUT", signedRequest);
         xhr.setRequestHeader('x-amz-acl', 'public-read');
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-            console.log('uploaded file');
-            console.log(url);
-          }
-        };
         xhr.upload.onprogress = function(event) {
           if (event.lengthComputable) {
             $('#progress').progress('increment', (event.loaded / event.total) * 100);
           }
         };
-        xhr.onerror = function() {
-          alert("Could not upload file.");
-        };
+        xhr.addEventListener("load", function(event) {
+          console.log('upload complete');
+          console.log(url);
+        });
+        xhr.addEventListener("error", function(event) {
+          console.log('upload error');
+        });
+        xhr.addEventListener("abort", function(event) {
+          console.log('upload aborted');
+        });
         xhr.send(file);
       }
 
@@ -93,8 +81,8 @@
             getSignedRequest(file);
         }
       });
+      $('#progress').progress({ percent: 0 });
 
-      $('#progress').progress('increment', 0);
     </script>
 
 </body>
