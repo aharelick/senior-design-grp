@@ -32,3 +32,5 @@ semantic/dist
 # Config File
 config/config.js
 
+# Webstorm
+.idea
