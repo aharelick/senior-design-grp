@@ -12,6 +12,7 @@ var flash = require('connect-flash');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var expressValidator = require('express-validator');
+var aws = require('aws-sdk');
 
 require('./config/pass')(passport);
 
@@ -28,6 +29,8 @@ if (app.get('env') === 'development') {
 }
 
 var dbURI = process.env.MONGOLAB_URI || config.db;
+var awsAccessKey = process.env.AWS_ACCESS_KEY || config.awsAccessKey;
+var awsSecretKey = process.env.AWS_SECRET_KEY || config.awsSecretKey;
 
 mongoose.connect(dbURI);
 mongoose.connection.on('error', function() {
@@ -37,6 +40,8 @@ mongoose.connection.on('error', function() {
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+aws.config.update({accessKeyId: awsAccessKey, secretAccessKey: awsSecretKey});
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

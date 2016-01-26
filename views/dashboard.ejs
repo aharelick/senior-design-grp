@@ -12,16 +12,90 @@
     <main>
       <div class="ui main text container">
         <h1 class="ui header">Upload Your Data</h1>
-        <form>
-          <input class="ui input" type="file" name="dataFile"></input><br><br>
-          <button class="ui button" action="submit">Submit Data File</input>
-        </form>
+        <div class="ui form">
+          <div class="field">
+            <input id="file_input" class="ui input" type="file" name="file-input">
+          </div>
+          <button class="ui button" action="submit">Submit Data File</button>
+        </div></br>
+        <div class="ui teal progress" id="progress">
+          <div class="bar">
+            <div class="progress"></div>
+          </div>
+          <div class="label">Uploading File</div>
+        </div>
+
       </div>
     </main>
 
     <footer>
       <% include ./partials/footer %>
     </footer>
+
+    <script>
+      var getSignedRequest = function(file) {
+        $.ajax({
+          url: '/sign-s3',
+          type: 'GET',
+          data: { name: file.name, type: file.type },
+          success: function(data, textStatus, jqXHR) {
+            console.log('got signed request');
+            console.log(data);
+            console.log(file);
+            uploadFile(file, data.signed_request, data.url);
+          },
+          error: function(jqXHR, textStatus, err) {
+            console.log(err);
+          }
+        });
+      }
+
+      var uploadFile = function(file, signedRequest, url) {
+//        $.ajax({
+//          url: signedRequest,
+//          type: 'PUT',
+//          data: 'test',
+//          headers: { 'x-amz-acl': 'public-read' },
+//          success: function (data, textStatus, jqXHR) {
+//            console.log('uploaded file');
+//            console.log(data);
+//            console.log(url);
+//          },
+//          error: function (jqXHR, textStatus, err) {
+//            console.log(err);
+//          }
+//        });
+        var xhr = new XMLHttpRequest();
+        xhr.open("PUT", signedRequest);
+        xhr.setRequestHeader('x-amz-acl', 'public-read');
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            console.log('uploaded file');
+            console.log(url);
+          }
+        };
+        xhr.upload.onprogress = function(event) {
+          if (event.lengthComputable) {
+            $('#progress').progress('increment', (event.loaded / event.total) * 100);
+          }
+        };
+        xhr.onerror = function() {
+          alert("Could not upload file.");
+        };
+        xhr.send(file);
+      }
+
+      $('.ui.form button').click(function() {
+        var file = $('.ui.form input[name="file-input"]')[0].files[0];
+        if (!file) {
+            console.log('no file selected');
+        } else {
+            getSignedRequest(file);
+        }
+      });
+
+      $('#progress').progress('increment', 0);
+    </script>
 
 </body>
 </html>
