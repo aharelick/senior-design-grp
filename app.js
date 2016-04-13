@@ -27,7 +27,7 @@ if (app.get('env') === 'development') {
   config = require('./config/config');
 }
 
-var dbURI = process.env.MONGOLAB_URI || config.db;
+var dbURI = process.env.MONGODB_URI || config.db;
 var awsAccessKey = process.env.AWS_ACCESS_KEY || config.awsAccessKey;
 var awsSecretKey = process.env.AWS_SECRET_KEY || config.awsSecretKey;
 
