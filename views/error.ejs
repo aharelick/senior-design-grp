@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <% include ./partials/head %>
+  <% include ./partials/head %>
 </head>
 <body>
 
 <main>
-    <div class="ui container">
-        <h1><%= message %></h1>
-        <h2><%= status %></h2>
-        <% if (error.stack) { %>
-            <pre><%= error.stack %></pre>
-        <% } %>
-    </div>
+  <div class="ui container">
+    <h1><%= message %></h1>
+    <h2><%= status %></h2>
+    <% if (error.stack) { %>
+      <pre><%= error.stack %></pre>
+    <% } %>
+  </div>
 </main>
 
 </body>
