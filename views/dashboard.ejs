@@ -3,6 +3,7 @@
 <head>
   <% include ./partials/head %>
 </head>
+<<<<<<< HEAD
 <body>
 
   <header>
@@ -12,6 +13,7 @@
   <main>
     <div class="ui main text container">
       <h1 class="ui header">Upload Your Data</h1>
+      <a href="/help">What should my data look like?</a>
       <div class="ui form">
         <div class="field">
           <input id="file_input" class="ui input" type="file" name="file-input">
@@ -24,7 +26,26 @@
         </div>
         <div class="label">Uploading File</div>
       </div>
-
+      <h1 class="ui header">My Recommendations</h1>
+      <table class="ui celled table">
+        <thead>
+        <tr><th>Uploaded File</th>
+          <th>Status</th>
+          <th>My Results</th>
+        </tr></thead>
+        <tbody>
+        <tr>
+          <td>ratings1.csv</td>
+          <td class="positive">Complete</td>
+          <td><a href="/dummydata">ratings1_results.txt</a></td>
+        </tr>
+        <tr>
+          <td>ratings2.csv</td>
+          <td class="negative">Incomplete</td>
+          <td>N/A</td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </main>
 
