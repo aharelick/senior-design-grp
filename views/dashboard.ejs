@@ -11,11 +11,32 @@
 
     <main>
       <div class="ui main text container">
-        <h1 class="ui header">Upload Your Data</h1>
+        <h1 class="ui header">Upload Data</h1>
+        <a href="/help">What should my data look like?</a>
         <form>
           <input class="ui input" type="file" name="dataFile"></input><br><br>
-          <button class="ui button" action="submit">Submit Data File</input>
+          <button class="ui button" action="submit">Submit Data File</button>
         </form>
+        <h1 class="ui header">My Recommendations</h1>
+        <table class="ui celled table">
+          <thead>
+            <tr><th>Uploaded File</th>
+            <th>Status</th>
+            <th>My Results</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td>ratings1.csv</td>
+              <td class="positive">Complete</td>
+              <td><a href="/dummydata">ratings1_results.txt</a></td>
+            </tr>
+            <tr>
+              <td>ratings2.csv</td>
+              <td class="negative">Incomplete</td>
+              <td>N/A</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </main>
 
