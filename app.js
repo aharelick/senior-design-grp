@@ -65,7 +65,8 @@ app.use(flash());
 app.use(function(req, res, next) {
   res.locals.messages = {
     success: req.flash('success'),
-    errors: req.flash('errors')
+    errors: req.flash('errors'),
+    form_errors: req.flash('form-errors')
   };
   next();
 });

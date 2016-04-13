@@ -6,9 +6,18 @@ var aws = require('aws-sdk');
 
 var PAGE_TITLE = 'GRP';
 
+var isAuthenticated = function (req, res, next) {
+  if (req.isAuthenticated())
+    return next();
+  res.redirect('/login');
+}
+
 /* GET signup page. */
 router.get('/', function(req, res, next) {
-  return res.redirect('/signup');
+  if (req.isAuthenticated()) {
+    return res.redirect('/dashboard');
+  }
+  return res.redirect('/login');
 });
 
 /* GET signup page. */
@@ -22,7 +31,7 @@ router.get('/login', function(req, res, next) {
 });
 
 /* GET dashboard. */
-router.get('/dashboard', function(req, res, next) {
+router.get('/dashboard', isAuthenticated, function(req, res, next) {
   return res.render('dashboard', { title: PAGE_TITLE});
 });
 
@@ -39,7 +48,7 @@ router.post('/signup', function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
+    req.flash('form-errors', errors);
     return res.redirect('/signup');
   }
 
@@ -48,10 +57,10 @@ router.post('/signup', function(req, res, next) {
     password: req.body.password,
   });
 
-  // email.toLowerCase()?
+  // TODO: lowercase email?
   User.findOne({ email: req.body.email }, function(err, existingUser) {
     if (existingUser) {
-      req.flash('errors', { msg: 'Account with that email address already exists.' });
+      req.flash('form-errors', 'Account with that email address already exists.');
       return res.redirect('/signup');
     }
     user.save(function(err) {
@@ -69,7 +78,7 @@ router.post('/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
     if (err) { return next(err); }
     if (!user) {
-      req.flash('errors', { msg: 'Incorrect email or password.' });
+      req.flash('errors', 'Incorrect email or password.');
       return res.redirect('/login');
     }
     req.login(user, function(err) {
@@ -85,7 +94,7 @@ router.get('/logout', function(req, res) {
 });
 
 // TODO protect this authenticated route
-router.get('/sign-s3', function(req, res){
+router.get('/sign-s3', isAuthenticated, function(req, res) {
   // TODO validate the query variables name, type exist
 
   var name = req.query.name;

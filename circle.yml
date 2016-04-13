@@ -2,7 +2,7 @@ machine:
   node:
     version: 5.1.0
   environment:
-    MONGOLAB_URI: mongodb://localhost:27017/coursify
+    MONGOLAB_URI: mongodb://localhost:27017/grp
     SESSION_SECRET: dummy_secret
     AWS_ACCESS_KEY: dummy_key
     AWS_SECRET_KEY: dummy_secret
