@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www",
+    "test": "mocha spec.js"
   },
   "dependencies": {
     "aws-sdk": "*",
@@ -23,7 +25,8 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "semantic-ui": "^2.1.6",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "supertest": "^1.2.0"
   },
   "devDependencies": {
     "gulp": "^3.9.0"

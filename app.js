@@ -10,7 +10,6 @@ var passport = require('passport');
 var MongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
 var routes = require('./routes/index');
-var users = require('./routes/users');
 var expressValidator = require('express-validator');
 var aws = require('aws-sdk');
 
@@ -74,7 +73,6 @@ app.use(function(req, res, next) {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -92,6 +90,7 @@ if (app.get('env') === 'development') {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
+      status: err.status,
       error: err
     });
   });
@@ -103,6 +102,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
+    status: err.status,
     error: {}
   });
 });

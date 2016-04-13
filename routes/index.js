@@ -4,24 +4,26 @@ var passport = require('passport');
 var User = require('../models/User');
 var aws = require('aws-sdk');
 
+var PAGE_TITLE = 'GRP';
+
 /* GET signup page. */
 router.get('/', function(req, res, next) {
-  res.redirect('/signup');
+  return res.redirect('/signup');
 });
 
 /* GET signup page. */
 router.get('/signup', function(req, res, next) {
-  res.render('signup', { title: 'RaaS' });
+  return res.render('signup', { title: PAGE_TITLE });
 });
 
 /* GET login page. */
 router.get('/login', function(req, res, next) {
-  res.render('login', { title: 'RaaS'});
+  return res.render('login', { title: PAGE_TITLE});
 });
 
 /* GET dashboard. */
 router.get('/dashboard', function(req, res, next) {
-  res.render('dashboard', { title: 'RaaS'});
+  return res.render('dashboard', { title: PAGE_TITLE});
 });
 
 /* POST signup. */
@@ -56,7 +58,7 @@ router.post('/signup', function(req, res, next) {
       if (err) return next(err);
       req.login(user, function(err) {
         if (err) return next(err);
-        res.redirect('/dashboard');
+        return res.redirect('/dashboard');
       });
     });
   });
@@ -79,7 +81,7 @@ router.post('/login', function(req, res, next) {
 
 router.get('/logout', function(req, res) {
   req.logout();
-  res.redirect('/login');
+  return res.redirect('/login');
 });
 
 // TODO protect this authenticated route
@@ -107,7 +109,7 @@ router.get('/sign-s3', function(req, res){
         signed_request: data,
         url: 'https://'+ bucketName +'.s3.amazonaws.com/' + name
       };
-      res.json(return_data);
+      return res.json(return_data);
     }
   });
 });
