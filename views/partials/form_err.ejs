@@ -1,0 +1,7 @@
+<% if (messages.form_errors) { %>
+<ul class="list">
+  <% for (i in messages.form_errors) { %>
+    <li><%= messages.form_errors[i] %></li>
+  <% } %>
+</ul>
+<% } %>

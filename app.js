@@ -10,8 +10,8 @@ var passport = require('passport');
 var MongoStore = require('connect-mongo')(session);
 var flash = require('connect-flash');
 var routes = require('./routes/index');
-var users = require('./routes/users');
 var expressValidator = require('express-validator');
+var aws = require('aws-sdk');
 
 require('./config/pass')(passport);
 
@@ -27,7 +27,9 @@ if (app.get('env') === 'development') {
   config = require('./config/config');
 }
 
-var dbURI = process.env.MONGOLAB_URI || config.db;
+var dbURI = process.env.MONGODB_URI || config.db;
+var awsAccessKey = process.env.AWS_ACCESS_KEY || config.awsAccessKey;
+var awsSecretKey = process.env.AWS_SECRET_KEY || config.awsSecretKey;
 
 mongoose.connect(dbURI);
 mongoose.connection.on('error', function() {
@@ -37,6 +39,8 @@ mongoose.connection.on('error', function() {
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+aws.config.update({accessKeyId: awsAccessKey, secretAccessKey: awsSecretKey});
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -61,7 +65,8 @@ app.use(flash());
 app.use(function(req, res, next) {
   res.locals.messages = {
     success: req.flash('success'),
-    errors: req.flash('errors')
+    errors: req.flash('errors'),
+    form_errors: req.flash('form-errors')
   };
   next();
 });
@@ -69,7 +74,6 @@ app.use(function(req, res, next) {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -87,6 +91,7 @@ if (app.get('env') === 'development') {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
+      status: err.status,
       error: err
     });
   });
@@ -98,6 +103,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,
+    status: err.status,
     error: {}
   });
 });

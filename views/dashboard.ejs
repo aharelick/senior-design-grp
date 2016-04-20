@@ -3,46 +3,108 @@
 <head>
   <% include ./partials/head %>
 </head>
-<body class="container">
+<<<<<<< HEAD
+<body>
 
-    <header>
-      <% include ./partials/header %>
-    </header>
+  <header>
+    <% include ./partials/header %>
+  </header>
 
-    <main>
-      <div class="ui main text container">
-        <h1 class="ui header">Upload Data</h1>
-        <a href="/help">What should my data look like?</a>
-        <form>
-          <input class="ui input" type="file" name="dataFile"></input><br><br>
-          <button class="ui button" action="submit">Submit Data File</button>
-        </form>
-        <h1 class="ui header">My Recommendations</h1>
-        <table class="ui celled table">
-          <thead>
-            <tr><th>Uploaded File</th>
-            <th>Status</th>
-            <th>My Results</th>
-          </tr></thead>
-          <tbody>
-            <tr>
-              <td>ratings1.csv</td>
-              <td class="positive">Complete</td>
-              <td><a href="/dummydata">ratings1_results.txt</a></td>
-            </tr>
-            <tr>
-              <td>ratings2.csv</td>
-              <td class="negative">Incomplete</td>
-              <td>N/A</td>
-            </tr>
-          </tbody>
-        </table>
+  <main>
+    <div class="ui main text container">
+      <h1 class="ui header">Upload Your Data</h1>
+      <a href="/help">What should my data look like?</a>
+      <div class="ui form">
+        <div class="field">
+          <input id="file_input" class="ui input" type="file" name="file-input">
+        </div>
+        <button class="ui button" action="submit">Submit Data File</button>
+      </div></br>
+      <div class="ui purple progress" id="progress">
+        <div class="bar">
+          <div class="progress"></div>
+        </div>
+        <div class="label">Uploading File</div>
       </div>
-    </main>
+      <h1 class="ui header">My Recommendations</h1>
+      <table class="ui celled table">
+        <thead>
+        <tr><th>Uploaded File</th>
+          <th>Status</th>
+          <th>My Results</th>
+        </tr></thead>
+        <tbody>
+        <tr>
+          <td>ratings1.csv</td>
+          <td class="positive">Complete</td>
+          <td><a href="/dummydata">ratings1_results.txt</a></td>
+        </tr>
+        <tr>
+          <td>ratings2.csv</td>
+          <td class="negative">Incomplete</td>
+          <td>N/A</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
 
-    <footer>
-      <% include ./partials/footer %>
-    </footer>
+  <footer>
+    <% include ./partials/footer %>
+  </footer>
+
+  <script>
+    var getSignedRequest = function(file) {
+      $.ajax({
+        url: '/sign-s3',
+        type: 'GET',
+        data: { name: file.name, type: file.type },
+        success: function(data, textStatus, jqXHR) {
+          console.log('got signed request');
+          console.log(data);
+          console.log(file);
+          uploadFile(file, data.signed_request, data.url);
+        },
+        error: function(jqXHR, textStatus, err) {
+          console.log(err);
+        }
+      });
+    }
+
+    var uploadFile = function(file, signedRequest, url) {
+      $('#progress').progress({ percent: 0 });
+      var xhr = new XMLHttpRequest();
+      xhr.open("PUT", signedRequest);
+      xhr.setRequestHeader('x-amz-acl', 'public-read');
+      xhr.upload.onprogress = function(event) {
+        if (event.lengthComputable) {
+          $('#progress').progress('increment', (event.loaded / event.total) * 100);
+        }
+      };
+      xhr.addEventListener("load", function(event) {
+        console.log('upload complete');
+        console.log(url);
+      });
+      xhr.addEventListener("error", function(event) {
+        console.log('upload error');
+      });
+      xhr.addEventListener("abort", function(event) {
+        console.log('upload aborted');
+      });
+      xhr.send(file);
+    }
+
+    $('.ui.form button').click(function() {
+      var file = $('.ui.form input[name="file-input"]')[0].files[0];
+      if (!file) {
+          console.log('no file selected');
+      } else {
+          getSignedRequest(file);
+      }
+    });
+    $('#progress').progress({ percent: 0 });
+
+  </script>
 
 </body>
 </html>
