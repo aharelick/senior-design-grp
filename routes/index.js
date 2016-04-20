@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var User = require('../models/User');
+var Upload = require('../models/Upload');
 var aws = require('aws-sdk');
 
 var PAGE_TITLE = 'GRP';
@@ -93,18 +94,17 @@ router.get('/logout', function(req, res) {
   return res.redirect('/login');
 });
 
-// TODO protect this authenticated route
-router.get('/sign-s3', isAuthenticated, function(req, res) {
+router.get('/sign-s3', isAuthenticated, function(req, res, next) {
   // TODO validate the query variables name, type exist
 
   var name = req.query.name;
   var type = req.query.type;
-  var bucketName = 'raas';
+  var bucketName = 'generalized-recommendation-platform';
 
   var s3 = new aws.S3();
   var s3Options = {
     Bucket: bucketName,
-    Key: name,
+    Key: req.user.id + '/' + name,
     Expires: 60,
     ContentType: type,
     // TODO do we want this to be public read
@@ -114,13 +114,44 @@ router.get('/sign-s3', isAuthenticated, function(req, res) {
     if (err){
       console.log(err);
     } else {
+      var upload = new Upload({
+        user: req.user.id,
+        status: 'Uploading',
+        name: name
+      });
       var return_data = {
         signed_request: data,
-        url: 'https://'+ bucketName +'.s3.amazonaws.com/' + name
+        url: 'https://'+ bucketName +'.s3.amazonaws.com/' + req.user.id + '/' + name,
+        upload_id: upload.id
       };
+      upload.location = return_data.url;
+      upload.save(function(err) {
+        if (err) return next(err);
+      });
       return res.json(return_data);
     }
   });
 });
+
+router.post('/update-upload', isAuthenticated, function(req, res, next) {
+  // TODO: validate these params
+  var id = req.body.id;
+  var status = req.body.status;
+  Upload.findOne({ _id: id }, function(err, upload) {
+    if (err) return res.json(err);
+    upload.status = status;
+    upload.save(function(err) {
+      if (err) return next(err);
+    });
+    return res.sendStatus(200);
+  });
+});
+
+router.get('/my-uploads', isAuthenticated, function(req, res, next) {
+  Upload.find({ user: req.user.id }, function(err, uploads) {
+    if (err) next(err);
+    return res.json(uploads);
+  })
+})
 
 module.exports = router;
