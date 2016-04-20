@@ -3,23 +3,17 @@
 <head>
   <% include ./partials/head %>
 </head>
-<body class="container">
+<body>
 
-  <header>
-    <% include ./partials/header %>
-  </header>
-
-  <main>
+<main>
+  <div class="ui container">
     <h1><%= message %></h1>
-    <h2><%= error.status %></h1>
+    <h2><%= status %></h2>
     <% if (error.stack) { %>
       <pre><%= error.stack %></pre>
     <% } %>
-  </main>
-
-  <footer>
-    <% include ./partials/footer %>
-  </footer>
+  </div>
+</main>
 
 </body>
 </html>
