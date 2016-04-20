@@ -26,14 +26,14 @@
         <div class="label">Uploading File</div>
       </div>
       <h1 class="ui header">My Recommendations</h1>
-      <table class="ui celled table">
+      <table id="upload-table" class="ui celled table">
         <thead>
         <tr><th>Uploaded File</th>
           <th>Status</th>
           <th>My Results</th>
         </tr></thead>
         <tbody>
-        <tr>
+        <!--tr>
           <td>ratings1.csv</td>
           <td class="positive">Complete</td>
           <td><a href="/dummydata">ratings1_results.txt</a></td>
@@ -42,7 +42,7 @@
           <td>ratings2.csv</td>
           <td class="negative">Incomplete</td>
           <td>N/A</td>
-        </tr>
+        </tr!-->
         </tbody>
       </table>
     </div>
@@ -53,7 +53,24 @@
   </footer>
 
   <script>
-    var getSignedRequest = function(file) {
+    var getUploads = function () {
+      $.ajax({
+        url: '/my-uploads',
+        type: 'GET',
+        success: function(data, textStatus, jqXHR) {
+          console.log(data);
+          $('#upload-table tbody').empty();
+          $.each(data, function(index, upload) {
+            $('#upload-table tbody').prepend('<tr><td>' + upload.name + '</td><td>' + upload.status + '</td><td>N/A</td></tr>')
+          });
+        },
+        error: function(jqXHR, textStatus, err) {
+          console.log(err);
+        }
+      });
+    }
+
+    var getSignedRequestAndUpload = function(file) {
       $.ajax({
         url: '/sign-s3',
         type: 'GET',
@@ -62,7 +79,7 @@
           console.log('got signed request');
           console.log(data);
           console.log(file);
-          uploadFile(file, data.signed_request, data.url);
+          uploadFile(file, data.signed_request, data);
         },
         error: function(jqXHR, textStatus, err) {
           console.log(err);
@@ -70,19 +87,33 @@
       });
     }
 
-    var uploadFile = function(file, signedRequest, url) {
+    var uploadFile = function(file, signedRequest, upload_data) {
+      getUploads();
       $('#progress').progress({ percent: 0 });
       var xhr = new XMLHttpRequest();
       xhr.open("PUT", signedRequest);
       xhr.setRequestHeader('x-amz-acl', 'public-read');
       xhr.upload.onprogress = function(event) {
         if (event.lengthComputable) {
-          $('#progress').progress('increment', (event.loaded / event.total) * 100);
+          console.log(Math.round((event.loaded / event.total) * 100));
+          $('#progress').progress({ percent: Math.round((event.loaded / event.total) * 100) });
         }
       };
       xhr.addEventListener("load", function(event) {
         console.log('upload complete');
-        console.log(url);
+        console.log(upload_data.url);
+        $.ajax({
+          url: '/update-upload',
+          type: 'POST',
+          data: { id: upload_data.upload_id, status: 'Uploaded' },
+          success: function(data, textStatus, jqXHR) {
+            console.log('updated status!');
+            getUploads();
+          },
+          error: function(jqXHR, textStatus, err) {
+            console.log(err);
+          }
+        });
       });
       xhr.addEventListener("error", function(event) {
         console.log('upload error');
@@ -98,11 +129,12 @@
       if (!file) {
           console.log('no file selected');
       } else {
-          getSignedRequest(file);
+          getSignedRequestAndUpload(file);
       }
     });
     $('#progress').progress({ percent: 0 });
 
+    getUploads();
   </script>
 
 </body>
