@@ -35,6 +35,11 @@ router.get('/dashboard', isAuthenticated, function(req, res, next) {
   return res.render('dashboard', { title: PAGE_TITLE});
 });
 
+/* GET help page. */
+router.get('/help', isAuthenticated, function(req, res, next) {
+  return res.render('help', { title: PAGE_TITLE});
+});
+
 /* POST signup. */
 router.post('/signup', function(req, res, next) {
 	//for testing, set to always return true

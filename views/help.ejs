@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include ./partials/head %>
+</head>
+<body>
+
+  <header>
+    <% include ./partials/header %>
+  </header>
+
+  <main>
+    <div class="ui main text container">
+      <h1 class="ui header">What Should My Data Look Like?</h1>
+      <p> Currently, GRP accepts a very limited data format. Your file type must be .csv, and each line in the file should be structured as follows: userid,itemid,rating.</p>
+      <p> The userid corresponds to a unique user ID within your dataset. The itemid corresponds to a unique item ID within your dataset. The rating refers to the rating that the particular user gave to the particular item. Each "entry" in the dataset (corresponding to one user's rating for one item) should be on its own line in the .csv file. A small portion of an example file is shown below.</p>
+      <img src="images/example_csv.png" alt="Example CSV" width="80">
+    </div>
+  </main>
+
+  <footer>
+    <% include ./partials/footer %>
+  </footer>
+
+</body>
+</html>
