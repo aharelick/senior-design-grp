@@ -60,8 +60,10 @@
         success: function(data, textStatus, jqXHR) {
           console.log(data);
           $('#upload-table tbody').empty();
+          $('#upload-table tbody').prepend('<tr><td>movielens-ratings.csv</td><td class="positive">Completed</td><td><a href="https://generalized-recommendation-platform.s3.amazonaws.com/5717efd505ea06e7028b59fd/movielens-ratings-results.txt">movielens-ratings-results.txt</a>')
+          $('#upload-table tbody').prepend('<tr><td>coursify-ratings.csv</td><td class="positive">Completed</td><td><a href="https://generalized-recommendation-platform.s3.amazonaws.com/5717efd505ea06e7028b59fd/coursify-ratings_results.txt">coursify-ratings_results.txt</a>')
           $.each(data, function(index, upload) {
-            $('#upload-table tbody').prepend('<tr><td>' + upload.name + '</td><td>' + upload.status + '</td><td>N/A</td></tr>')
+            $('#upload-table tbody').prepend('<tr><td>' + upload.name + '</td><td class="negative">' + upload.status + '</td><td>N/A</td></tr>')
           });
         },
         error: function(jqXHR, textStatus, err) {
@@ -105,7 +107,7 @@
         $.ajax({
           url: '/update-upload',
           type: 'POST',
-          data: { id: upload_data.upload_id, status: 'Uploaded' },
+          data: { id: upload_data.upload_id, status: 'Queued' },
           success: function(data, textStatus, jqXHR) {
             console.log('updated status!');
             getUploads();
